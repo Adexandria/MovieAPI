@@ -13,8 +13,8 @@ namespace MoviesAPI.Services
         {
             Users = new List<Users>()
             {
-                new Users { Id = Guid.NewGuid(), Username = "Addie"},
-                new Users {Id = Guid.NewGuid(),Username="Blankie"}
+                new Users() { Id = Guid.Parse("e9b8b2ba-75e0-417c-ab5e-40b6cbae50c4"), Username = "Addie"},
+                new Users() {Id = Guid.Parse("5e2754ba-0778-4bf3-9146-962fb74ac546"),Username="Blankie"}
             };
         }
 
