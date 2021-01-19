@@ -13,6 +13,8 @@ namespace MoviesAPI.Services
         Movies AddMovies(Movies movies);
         int Delete(Guid id);
         Movies Update(Movies updatedMovies);
+        IEnumerable<Movies> GetMoviesOnRental { get; }
+
         int Save();
     }
 }

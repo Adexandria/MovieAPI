@@ -11,30 +11,29 @@ namespace MoviesAPI.Services
         readonly List<Movies> Movies;
         public MoviesRepository()
         {
-            Movies = new List<Movies>()
-            {
-                new Movies{
-                Id = Guid.NewGuid(),
+            Movies = new List<Movies>(){
+                new Movies() {
+                Id = Guid.Parse("0681cc8a-e627-4a44-93fe-e4da57f65b6f"),
                 Name = "I May destroy you",
                 Description = "Arabella is a Twitter-star-turned-novelist who found fame with her debut book Chronicles of a Fed-Up Millennial and is publicly celebrated as a Millennial icon. While struggling to meet a deadline for her second book," +
                 "she takes a break from work to meet up with friends on a night out in London. The following morning, she struggles to remember what happened to her," +
                 "but recalls the events of the night with the help of her friends Terry (Weruche Opia) and Kwame (Paapa Essiedu).",
                 Rating = 5.00f,
-                RentalID =
+                RentalID = new Rentals()
                 {
-                    RentalId = Guid.NewGuid(),
+                   
                     OnRent = true
                 }
 
             },
-                new Movies{
-                Id = Guid.NewGuid(),
+                new Movies() {
+                Id = Guid.Parse("4c116ab2-eada-4786-b7c2-d1eced4df070"),
                 Name = "LoveCraft Country",
                 Description = " Lovecraft Country follows Atticus Freeman as he joins up with his friend Letitia and his Uncle George to embark on a road trip across 1950s Jim Crow America in search of his missing father",
                 Rating = 5.00f,
-                RentalID =
+                RentalID = new Rentals()
                 {
-                    RentalId = Guid.Empty,
+
                     OnRent = false
                 }
                 }
@@ -49,9 +48,18 @@ namespace MoviesAPI.Services
             }
         }
 
+        public IEnumerable<Movies> GetMoviesOnRental
+        {
+            get
+            {
+                return Movies.Where(s => s.RentalID.OnRent == true);
+            }
+        }
+
         public Movies AddMovies(Movies movies)
         {
             movies.Id = Guid.NewGuid();
+           
             Movies.Add(movies);
             return movies;
         }
