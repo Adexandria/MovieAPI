@@ -1,4 +1,5 @@
-﻿using MoviesAPI.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using MoviesAPI.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,65 +9,58 @@ namespace MoviesAPI.Services
 {
     public class UserRepository :IUser
     {
-        readonly List<Users> Users;
-        public UserRepository()
+        private readonly MovieDb db;
+        public UserRepository(MovieDb db)
         {
-            Users = new List<Users>()
-            {
-                new Users() { Id = Guid.Parse("e9b8b2ba-75e0-417c-ab5e-40b6cbae50c4"), Username = "Addie"},
-                new Users() {Id = Guid.Parse("5e2754ba-0778-4bf3-9146-962fb74ac546"),Username="Blankie"}
-            };
+            this.db = db ?? throw new NullReferenceException(nameof(db));
         }
 
         public IEnumerable<Users> GetUsers
         {
             get 
             {
-                return Users.OrderBy(r => r.Id);
+                return db.Users.OrderBy(r => r.Id).AsNoTracking();
             }
         }
 
-        public Users Add(Users users)
+        public async Task<Users> Add(Users users)
         {
-            users.Id = Guid.NewGuid();
-            Users.Add(users);
-            return users;
+           users.Id = Guid.NewGuid();
+           await db.Users.AddAsync(users);
+           return users;
         }
 
-        public int Delete(Guid Id)
+        public async Task<int> Delete(Guid Id)
         {
-            var query = GetUserById(Id);
+            var query = await GetUserById(Id);
             if(query != null) 
             {
-                Users.Remove(query);
-                return 0;
+                db.Users.Remove(query);
+                return await db.SaveChangesAsync();
             }
             throw new NullReferenceException(nameof(query));
 
         }
 
-        public Users GetUserById(Guid id)
+        public async Task<Users> GetUserById(Guid id)
         {
             if (id == null)
             {
                 throw new NullReferenceException(nameof(id));
             }
-            return Users.Where(r => r.Id == id).FirstOrDefault();
+            return await db.Users.Where(r => r.Id == id).AsNoTracking().FirstOrDefaultAsync();
         }
 
-        public int Save()
+        public async Task<int> Save()
         {
-            return 0;
+            return await db.SaveChangesAsync();
         }
 
         public Users Update(Users updatedUser)
         {
-            var query = GetUserById(updatedUser.Id);
-            if(query != null) 
-            {
-                query.Username = updatedUser.Username;
-            }
-            return query;
+            var query = db.Users.Attach(updatedUser);
+            query.State = EntityState.Modified;
+            return updatedUser;
         }
     }
 }
