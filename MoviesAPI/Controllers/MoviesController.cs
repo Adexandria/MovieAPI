@@ -50,7 +50,7 @@ namespace MoviesAPI.Controllers
                var addmovie = mapper.Map<Movies>(movie);
                await movies.AddMovies(addmovie);
                await movies.Save();
-               var newmovie = mapper.Map<MoviesDTo>(movie);
+               var newmovie = mapper.Map<MoviesDTo>(addmovie);
                return CreatedAtRoute("Movie",new { id = addmovie.MoviesId},newmovie);
             }
             return NotFound();
