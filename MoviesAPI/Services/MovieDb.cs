@@ -19,7 +19,7 @@ namespace MoviesAPI.Services
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Rentals>().HasKey(s=>s.RentalsId)
+            modelBuilder.Entity<Rentals>().HasKey(s=>s.RentalsId);
         }
     }
 }
