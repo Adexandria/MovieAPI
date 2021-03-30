@@ -56,7 +56,7 @@ namespace MoviesAPI.Controllers
             }
             return NotFound();
         }
-        //To edit or add chnages to an existing user
+        //To edit or add changes to an existing user
         [HttpPut("{id}")]
         public async Task<ActionResult<UserDTO>> UpdateUser(Users users,Guid id) 
         {
