@@ -17,6 +17,9 @@ namespace MoviesAPI.Profiles
 
             CreateMap<UserCreateDTO,Users>()
                   .ForMember(dest => dest.Username, opt => opt.MapFrom(s => s.Username));
+
+            CreateMap<UserUpdateDTO, Users>()
+                  .ForMember(dest => dest.Username, opt => opt.MapFrom(s => s.Username));
         }
     }
 }

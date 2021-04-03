@@ -24,11 +24,10 @@ namespace MoviesAPI.Controllers
             this.mapper = mapper;
         }
         //Get all Users
-         public ActionResult<UserDTO> GetAllUsers()
+         public ActionResult<Users> GetAllUsers()
          {
             var users = user.GetUsers;
-            var newusers = mapper.Map<IEnumerable<UserDTO>>(users);
-            return Ok(newusers);
+            return Ok(users);
          }
         //Get an Individual
         [HttpGet("{id}",Name ="user")]
@@ -52,20 +51,21 @@ namespace MoviesAPI.Controllers
                 await user.Add(currentuser);
                  await user.Save();
                 var addeduser = mapper.Map<UserDTO>(currentuser);
-                return Ok(addeduser);
+                return CreatedAtRoute("user", new { id = currentuser.Id }, addeduser);
             }
             return NotFound();
         }
         //To edit or add changes to an existing user
         [HttpPut("{id}")]
-        public async Task<ActionResult<UserDTO>> UpdateUser(Users users,Guid id) 
+        public async Task<ActionResult<UserDTO>> UpdateUser(UserUpdateDTO users,Guid id) 
         {
             var currentuser =await user.GetUserById(id);
+            var updateuser = mapper.Map<Users>(users);
             if(currentuser != null) 
             {
-              var query =  user.Update(users);
+              var query =  user.Update(updateuser);
               await user.Save();
-              var addeduser = mapper.Map<UserDTO>(currentuser);
+              var addeduser = mapper.Map<UserDTO>(query);
               return Ok(addeduser);
             }
             return NotFound();

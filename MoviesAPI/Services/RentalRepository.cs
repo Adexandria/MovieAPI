@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using MoviesAPI.Model;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
+using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
 
 namespace MoviesAPI.Services
@@ -45,6 +47,7 @@ namespace MoviesAPI.Services
             throw new NullReferenceException(nameof(id));
         }
 
+      
         public async Task<int> Save()
         {
             return await db.SaveChangesAsync();
@@ -53,14 +56,17 @@ namespace MoviesAPI.Services
         public async Task<Rentals> Update(Rentals rentals, Guid id)
         {
             var rental = await GetRental(id);
-            if(rental != null) 
+            if (rental == null) 
             {
-                var query = db.Rentals.Attach(rentals);
-                query.State = EntityState.Modified;
-                rentals.Movies = rental.Movies;
-                return rentals;
+                
+                await db.Rentals.AddAsync(rentals);
             }
-            throw new NullReferenceException(nameof(rental));
+            else
+            {
+                db.Entry(rental).State = EntityState.Detached;
+                db.Entry(rentals).State = EntityState.Modified;
+            }
+            return await GetRental(rentals.RentalsId);
         }
     }
 }

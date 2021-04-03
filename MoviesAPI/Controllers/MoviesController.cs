@@ -24,7 +24,7 @@ namespace MoviesAPI.Controllers
         }
         //To get all movies in the database
         [HttpGet]
-        public ActionResult<MoviesDTo> GetMovies()
+        public ActionResult<Movies> GetMovies()
         {
             var movie = movies.GetMovies;
             return Ok(movie);
@@ -57,9 +57,10 @@ namespace MoviesAPI.Controllers
         }
         // To edit or make changes to the existing movies in the database
         [HttpPut("{id}")]
-        public async Task<ActionResult<MoviesDTo>> UpdateMovies(Movies movie,Guid id)
+        public async Task<ActionResult<MoviesDTo>> UpdateMovies(MovieUpdateDTO movie,Guid id)
         {
-            var updatedmovie = await movies.Update(movie,id);
+            var updatemovie = mapper.Map<Movies>(movie);
+            var updatedmovie = await movies.Update(updatemovie, id);
             await movies.Save();
             var newmovie = mapper.Map<MoviesDTo>(updatedmovie);
             return Ok(newmovie);

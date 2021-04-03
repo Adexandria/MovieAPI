@@ -18,11 +18,13 @@ namespace MoviesAPI.Controllers
     public class RentalsController : ControllerBase
     {
         readonly IRentals rentals;
+        readonly IMovies movies;
         readonly IMapper mapper;
-        public RentalsController(IRentals rentals,IMapper mapper)
+        public RentalsController(IRentals rentals,IMapper mapper, IMovies movies)
         {
             this.rentals = rentals;
             this.mapper = mapper;
+            this.movies = movies;
         }
         //To get all Rental Movies
         [HttpGet]
@@ -30,7 +32,7 @@ namespace MoviesAPI.Controllers
         { 
             var rental = rentals.GetRentals;
             var onrent = mapper.Map<IEnumerable<RentalDTO>>(rental);
-            return Ok(onrent);
+            return Ok(rental);
         }
         //To get an Individual rental movie
         [HttpGet("{id}",Name ="rental")]
@@ -46,19 +48,22 @@ namespace MoviesAPI.Controllers
         }
         //To Add or update an existing rental movie
         [HttpPut("{id}")]
-        public  async Task<ActionResult<RentalDTO>> UpdateRental(Rentals rental,Guid id) 
+        public  async Task<ActionResult<RentalDTO>> UpdateRental(RentalCreateDTO rental,Guid id) 
         {
-            var onrent =  await rentals.Update(rental, id);
-            await rentals.Save();
-            var rent = mapper.Map<RentalDTO>(onrent);
-            return Ok(rent);
+                var movie = await movies.GetMovieById(id);
+                var movierental = mapper.Map<Rentals>(movie);
+                movierental.OnRent = rental.OnRent;
+                var newrent =  await rentals.Update(movierental,id);
+                var rent = mapper.Map<RentalDTO>(newrent);
+                return Ok(rent);
+  
         }
         //To delete an existing rental movie
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteRentals(Guid id) 
         {
             await rentals.Delete(id);
-            return NoContent();
+            return Ok();
         }
     }
 }

@@ -22,7 +22,11 @@ namespace MoviesAPI.Profiles
                 .ForMember(dest => dest.Rating, opt => opt.MapFrom(s => s.Rating))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(s => s.Description));
 
-           
+            CreateMap<MovieUpdateDTO, Movies>()
+              .ForMember(dest => dest.Name, opt => opt.MapFrom(s => s.Name))
+              .ForMember(dest => dest.Rating, opt => opt.MapFrom(s => s.Rating))
+              .ForMember(dest => dest.Description, opt => opt.MapFrom(s => s.Description));
+
         }
     }
 }

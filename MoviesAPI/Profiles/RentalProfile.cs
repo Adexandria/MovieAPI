@@ -20,8 +20,10 @@ namespace MoviesAPI.Profiles
 
             CreateMap<RentalCreateDTO, Rentals>()
                .ForMember(dest => dest.OnRent, opt => opt.MapFrom(s => s.OnRent));
-             
 
+            CreateMap<Movies, Rentals>()
+                .ForMember(dest => dest.RentalsId, opt => opt.MapFrom(s => s.MoviesId));
+                
         }
     }
 }
