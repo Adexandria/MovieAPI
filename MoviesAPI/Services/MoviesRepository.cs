@@ -62,6 +62,7 @@ namespace MoviesAPI.Services
             var movie = await GetMovieById(id);
             if (movie != null)
             {
+                updatedMovies.MoviesId = movie.MoviesId;
                 var query = db.Movies.Attach(updatedMovies);
                 query.State = EntityState.Modified;
                 await db.SaveChangesAsync();

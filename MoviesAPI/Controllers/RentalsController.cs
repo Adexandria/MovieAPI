@@ -4,22 +4,24 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MoviesAPI.DTO;
 using MoviesAPI.Model;
 using MoviesAPI.Services;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace MoviesAPI.Controllers
 {
     [ApiController]
     [Route("api/rentals")]
+    [Authorize]
     public class RentalsController : ControllerBase
     {
         readonly IRentals rentals;
         readonly IMovies movies;
         readonly IMapper mapper;
+       
         public RentalsController(IRentals rentals,IMapper mapper, IMovies movies)
         {
             this.rentals = rentals;

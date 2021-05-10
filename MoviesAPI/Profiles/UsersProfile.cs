@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MoviesAPI.DTO;
 using MoviesAPI.Model;
+using MoviesAPI.UserModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +13,13 @@ namespace MoviesAPI.Profiles
     {
         public UsersProfile()
         {
-            CreateMap<Users, UserDTO>()
-                .ForMember(dest => dest.Username, opt => opt.MapFrom(s => s.Username));
+            CreateMap<SignUpModel, Users>()
+                .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(s => s.Password));
 
-            CreateMap<UserCreateDTO,Users>()
-                  .ForMember(dest => dest.Username, opt => opt.MapFrom(s => s.Username));
+            CreateMap<LoginModel, Users>()
+               .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(s => s.Password));
 
-            CreateMap<UserUpdateDTO, Users>()
-                  .ForMember(dest => dest.Username, opt => opt.MapFrom(s => s.Username));
+
         }
     }
 }

@@ -15,9 +15,9 @@ namespace MoviesAPI.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.2");
+                .HasAnnotation("ProductVersion", "5.0.5")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("MoviesAPI.Model.Movies", b =>
                 {
@@ -33,6 +33,9 @@ namespace MoviesAPI.Migrations
 
                     b.Property<float>("Rating")
                         .HasColumnType("real");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("MoviesId");
 
@@ -50,20 +53,6 @@ namespace MoviesAPI.Migrations
                     b.HasKey("RentalsId");
 
                     b.ToTable("Rentals");
-                });
-
-            modelBuilder.Entity("MoviesAPI.Model.Users", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("MoviesAPI.Model.Rentals", b =>

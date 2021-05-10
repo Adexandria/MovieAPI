@@ -15,7 +15,7 @@ namespace MoviesAPI.Services
         }
         public DbSet<Movies> Movies { get; set; }
         public DbSet<Rentals> Rentals { get; set; } 
-        public DbSet<Users> Users { get; set; }
+   
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

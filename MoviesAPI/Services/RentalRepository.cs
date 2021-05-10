@@ -23,7 +23,7 @@ namespace MoviesAPI.Services
             this.movies = movies;
             
         }
-        public IEnumerable<Rentals> GetRentals => db.Rentals.OrderBy(s=>s.RentalsId).Include(s=>s.Movies).AsNoTracking();
+        public IEnumerable<Rentals> GetRentals => db.Rentals.OrderBy(s=>s.RentalsId).Where(s=>s.OnRent == true).Include(s=>s.Movies).AsNoTracking();
 
      
 
@@ -42,7 +42,7 @@ namespace MoviesAPI.Services
         {
             if(id != null) 
             {
-                return await db.Rentals.Where(s => s.RentalsId == id).Include(s=>s.Movies).AsNoTracking().FirstOrDefaultAsync();
+                return await db.Rentals.Where(s => s.RentalsId == id).Where(s => s.OnRent == true).Include(s=>s.Movies).AsNoTracking().FirstOrDefaultAsync();
             }
             throw new NullReferenceException(nameof(id));
         }
@@ -60,6 +60,7 @@ namespace MoviesAPI.Services
             {
                 
                 await db.Rentals.AddAsync(rentals);
+                await Save();
             }
             else
             {

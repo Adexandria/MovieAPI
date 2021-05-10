@@ -1,18 +1,15 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using MoviesAPI.Model;
 using MoviesAPI.Services;
+using MoviesAPI.UserService;
 
 namespace MoviesAPI
 {
@@ -30,13 +27,38 @@ namespace MoviesAPI
         {
             services.AddControllers();
             services.AddScoped<IMovies, MoviesRepository>();
-            services.AddScoped<IUser, UserRepository>();
             services.AddScoped<IRentals, RentalRepository>();
+            services.AddScoped<IPasswordHasher<Users>,PasswordHasher<Users>>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddIdentity<Users, IdentityRole>().AddEntityFrameworkStores<IdentityDb>().AddSignInManager().AddDefaultTokenProviders();
             services.AddDbContext<MovieDb>(opt =>
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("Movies")).EnableSensitiveDataLogging();
             });
+            services.AddDbContext<IdentityDb>(opts =>
+            {
+                opts.UseSqlServer(Configuration.GetConnectionString("Movies")).EnableSensitiveDataLogging();
+            });
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Default Password settings.
+                options.Password.RequiredLength = 4;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Lockout.MaxFailedAccessAttempts = 3;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(30);
+                options.User.RequireUniqueEmail = true;
+
+            });
+            services.ConfigureApplicationCookie(options =>
+            {
+                // Cookie settings
+                options.Cookie.HttpOnly = true;
+
+                options.LoginPath = PathString.Empty;
+                options.AccessDeniedPath = PathString.Empty;
+                //options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,6 +72,8 @@ namespace MoviesAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
