@@ -9,10 +9,11 @@ namespace MoviesAPI.Services
     public interface IMovies
     {
         IEnumerable<Movies> GetMovies { get; }
-        Task<Movies> GetMovieById(Guid id);
-        Task<Movies> AddMovies(Movies movies);
-        Task<int> Delete(Guid id);
-        Task<Movies> Update(Movies updatedMovies,Guid id);
+        Task<string> GetUserIdByUserName(string username);
+        Task<Movies> GetMovieById(Guid id,string username);
+        Task<Movies> AddMovies(Movies movies,string username);
+        Task<int> Delete(Guid id,string username);
+        Task<Movies> Update(Movies updatedMovies,string username);
         Task<int> Save();
     }
 }

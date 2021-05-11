@@ -1,13 +1,9 @@
-﻿using AutoMapper;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using MoviesAPI.Model;
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
 
 namespace MoviesAPI.Services
@@ -16,12 +12,13 @@ namespace MoviesAPI.Services
     {
         readonly MovieDb db;
         readonly IMovies movies;
- 
-        public RentalRepository(MovieDb db, IMovies movies)
+        readonly UserManager<Users> userManager;
+        public RentalRepository(MovieDb db, IMovies movies, UserManager<Users> userManager)
         {
             this.db = db ?? throw new NullReferenceException(nameof(db));
-            this.movies = movies;
-            
+            this.movies = movies ?? throw new NullReferenceException(nameof(movies)) ;
+            this.userManager = userManager ?? throw new NullReferenceException(nameof(userManager));
+
         }
         public IEnumerable<Rentals> GetRentals => db.Rentals.OrderBy(s=>s.RentalsId).Where(s=>s.OnRent == true).Include(s=>s.Movies).AsNoTracking();
 
@@ -47,7 +44,12 @@ namespace MoviesAPI.Services
             throw new NullReferenceException(nameof(id));
         }
 
-      
+        public async Task VerifyUserByUserName(string username)
+        {
+            var currentuser = await userManager.FindByNameAsync(username);
+            if (currentuser == null) throw new NullReferenceException(nameof(currentuser));
+           
+        }
         public async Task<int> Save()
         {
             return await db.SaveChangesAsync();

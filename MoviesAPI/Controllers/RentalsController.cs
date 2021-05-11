@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -14,7 +12,7 @@ using MoviesAPI.Services;
 namespace MoviesAPI.Controllers
 {
     [ApiController]
-    [Route("api/rentals")]
+    [Route("api/{username}/rentals")]
     [Authorize]
     public class RentalsController : ControllerBase
     {
@@ -34,7 +32,7 @@ namespace MoviesAPI.Controllers
         { 
             var rental = rentals.GetRentals;
             var onrent = mapper.Map<IEnumerable<RentalDTO>>(rental);
-            return Ok(rental);
+            return Ok(onrent);
         }
         //To get an Individual rental movie
         [HttpGet("{id}",Name ="rental")]
@@ -50,9 +48,9 @@ namespace MoviesAPI.Controllers
         }
         //To Add or update an existing rental movie
         [HttpPut("{id}")]
-        public  async Task<ActionResult<RentalDTO>> UpdateRental(RentalCreateDTO rental,Guid id) 
+        public  async Task<ActionResult<RentalDTO>> UpdateRental(RentalCreateDTO rental,Guid id,string username) 
         {
-                var movie = await movies.GetMovieById(id);
+                var movie = await movies.GetMovieById(id,username);
                 var movierental = mapper.Map<Rentals>(movie);
                 movierental.OnRent = rental.OnRent;
                 var newrent =  await rentals.Update(movierental,id);

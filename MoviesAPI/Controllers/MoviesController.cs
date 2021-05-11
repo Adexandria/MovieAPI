@@ -10,7 +10,7 @@ using MoviesAPI.Services;
 namespace MoviesAPI.Controllers
 {
     [ApiController]
-    [Route("api/Movies")]
+    [Route("api/{username}/Movies")]
     [Authorize]
     public class MoviesController : ControllerBase
     {
@@ -21,18 +21,12 @@ namespace MoviesAPI.Controllers
             this.movies = movies;
             this.mapper = mapper;
         }
-        //To get all movies in the database
-        [HttpGet]
-        public ActionResult<Movies> GetMovies()
-        {
-            var movie = movies.GetMovies;
-            return Ok(movie);
-        }
-        //To get individual movie
+      
+        //The Function gets an existing movie in the database
         [HttpGet("{id}",Name ="Movie")]
-        public async Task<ActionResult<MoviesDTo>> GetmovieById(Guid id)
+        public async Task<ActionResult<MoviesDTo>> GetmovieById(Guid id,string username)
         {
-            var movie = await movies.GetMovieById(id);
+            var movie = await movies.GetMovieById(id,username);
             if (movie != null)
             {
                 var newmovie = mapper.Map<MoviesDTo>(movie);
@@ -40,35 +34,24 @@ namespace MoviesAPI.Controllers
             }
             return NotFound();
         }
-        //To add an individual movie
-        [HttpPost]
-        public async Task<ActionResult<MoviesDTo>> AddMovies(MovieCreateDTO movie)
-        {
-            if (movie != null)
-            {
-               var addmovie = mapper.Map<Movies>(movie);
-               await movies.AddMovies(addmovie);
-               await movies.Save();
-               var newmovie = mapper.Map<MoviesDTo>(addmovie);
-               return CreatedAtRoute("Movie",new { id = addmovie.MoviesId},newmovie);
-            }
-            return NotFound();
-        }
-        // To edit or make changes to the existing movies in the database
-        [HttpPut("{id}")]
-        public async Task<ActionResult<MoviesDTo>> UpdateMovies(MovieUpdateDTO movie,Guid id)
+       
+        // Editing an already existing movie
+        // and if it doesn't exist
+        // the function will add the movie to the database
+        [HttpPut()]
+        public async Task<ActionResult<MoviesDTo>> UpdateMovies(MovieUpdateDTO movie,string username)
         {
             var updatemovie = mapper.Map<Movies>(movie);
-            var updatedmovie = await movies.Update(updatemovie, id);
+            var updatedmovie = await movies.Update(updatemovie,username);
             await movies.Save();
             var newmovie = mapper.Map<MoviesDTo>(updatedmovie);
             return Ok(newmovie);
         }
-        //To delete existing movie in the database
+        //The funtion deletes an existing movie
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteMovies(Guid id) 
+        public async Task<ActionResult> DeleteMovies(Guid id,string username) 
         {
-            await movies.Delete(id);
+            await movies.Delete(id,username);
             return NoContent();
         }
     }

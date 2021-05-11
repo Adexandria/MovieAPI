@@ -44,6 +44,9 @@ namespace MoviesAPI
                 // Default Password settings.
                 options.Password.RequiredLength = 4;
                 options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
                 options.Lockout.MaxFailedAccessAttempts = 3;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(30);
                 options.User.RequireUniqueEmail = true;

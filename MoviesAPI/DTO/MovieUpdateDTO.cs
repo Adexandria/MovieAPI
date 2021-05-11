@@ -8,7 +8,6 @@ namespace MoviesAPI.DTO
 {
     public class MovieUpdateDTO: MovieCreateDTO
     {
-       [Required(ErrorMessage ="Enter Guid key")]
        public Guid MoviesId { get; set; }
     }
 }
