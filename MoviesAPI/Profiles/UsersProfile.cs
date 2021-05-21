@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
-using MoviesAPI.DTO;
 using MoviesAPI.Model;
 using MoviesAPI.UserModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
+
 
 namespace MoviesAPI.Profiles
 {
@@ -21,6 +18,8 @@ namespace MoviesAPI.Profiles
 
             CreateMap<GithubSignUpModel, SignUpModel>()
                 .ForMember(dest => dest.RetypePassword, opt => opt.MapFrom(s => s.Password));
+
+            CreateMap<GithubLoginModel, LoginModel>();
         }
     }
 }

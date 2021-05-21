@@ -2,7 +2,7 @@
 
 namespace MoviesAPI.UserModel
 {
-    public class GithubSignUpModel :LoginModel
+    public class GithubLoginModel:LoginModel
     {
     }
 }

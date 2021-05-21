@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using MoviesAPI.DTO;
 using MoviesAPI.Model;
 using MoviesAPI.Services;
-
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MoviesAPI.Controllers
 {
@@ -26,7 +25,8 @@ namespace MoviesAPI.Controllers
             this.mapper = mapper;
             this.movies = movies;
         }
-        //To get all Rental Movies
+
+        //Gets the movies on rental
         [HttpGet]
         public ActionResult<RentalDTO> GetRentals() 
         { 
@@ -34,7 +34,8 @@ namespace MoviesAPI.Controllers
             var onrent = mapper.Map<IEnumerable<RentalDTO>>(rental);
             return Ok(onrent);
         }
-        //To get an Individual rental movie
+
+        //Get an Individual movie on rental 
         [HttpGet("{id}",Name ="rental")]
         public async Task<ActionResult<RentalDTO>> Rental(Guid id) 
         {
@@ -46,7 +47,10 @@ namespace MoviesAPI.Controllers
             }
             return NotFound();
         }
-        //To Add or update an existing rental movie
+
+        // Editing an already existing rental movie
+        // and if it doesn't exist
+        // the function will add the rental movie to the database
         [HttpPut("{id}")]
         public  async Task<ActionResult<RentalDTO>> UpdateRental(RentalCreateDTO rental,Guid id,string username) 
         {
@@ -58,7 +62,8 @@ namespace MoviesAPI.Controllers
                 return Ok(rent);
   
         }
-        //To delete an existing rental movie
+
+        //The funtion deletes an existing rental movie
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteRentals(Guid id) 
         {

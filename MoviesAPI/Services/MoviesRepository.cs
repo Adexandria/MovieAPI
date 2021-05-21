@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using MoviesAPI.Model;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
+using MoviesAPI.Model;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace MoviesAPI.Services
 {
@@ -25,7 +25,6 @@ namespace MoviesAPI.Services
                 return db.Movies.OrderBy(s => s.MoviesId).AsNoTracking();
             }
         }
-
 
         public async Task<Movies> AddMovies(Movies movies,string username)
         {

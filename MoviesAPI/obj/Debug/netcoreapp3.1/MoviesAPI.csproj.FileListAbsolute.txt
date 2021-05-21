@@ -152,8 +152,4 @@ C:\Users\T14\Documents\Local Git\MovieAPI\MoviesAPI\obj\Debug\netcoreapp3.1\scop
 C:\Users\T14\Documents\Local Git\MovieAPI\MoviesAPI\obj\Debug\netcoreapp3.1\MoviesAPI.RazorTargetAssemblyInfo.cache
 C:\Users\T14\Documents\Local Git\MovieAPI\MoviesAPI\obj\Debug\netcoreapp3.1\MoviesAPI.csproj.CopyComplete
 C:\Users\T14\Documents\Local Git\MovieAPI\MoviesAPI\obj\Debug\netcoreapp3.1\MoviesAPI.genruntimeconfig.cache
-C:\Users\T14\Documents\Local Git\MovieAPI\MoviesAPI\bin\Debug\netcoreapp3.1\BCrypt.Net-Core.dll
-C:\Users\T14\Documents\Local Git\MovieAPI\MoviesAPI\bin\Debug\netcoreapp3.1\CloudrailSI.dll
-C:\Users\T14\Documents\Local Git\MovieAPI\MoviesAPI\bin\Debug\netcoreapp3.1\OpenSSL.PrivateKeyDecoder.dll
-C:\Users\T14\Documents\Local Git\MovieAPI\MoviesAPI\bin\Debug\netcoreapp3.1\OpenSSL.X509Certificate2.Provider.dll
 C:\Users\T14\Documents\Local Git\MovieAPI\MoviesAPI\bin\Debug\netcoreapp3.1\Octokit.dll

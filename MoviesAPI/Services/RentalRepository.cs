@@ -1,28 +1,26 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using MoviesAPI.Model;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
+using MoviesAPI.Model;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace MoviesAPI.Services
 {
     public class RentalRepository : IRentals
     {
         readonly MovieDb db;
-        readonly IMovies movies;
         readonly UserManager<Users> userManager;
-        public RentalRepository(MovieDb db, IMovies movies, UserManager<Users> userManager)
+
+        public RentalRepository(MovieDb db, UserManager<Users> userManager)
         {
             this.db = db ?? throw new NullReferenceException(nameof(db));
-            this.movies = movies ?? throw new NullReferenceException(nameof(movies)) ;
             this.userManager = userManager ?? throw new NullReferenceException(nameof(userManager));
 
         }
         public IEnumerable<Rentals> GetRentals => db.Rentals.OrderBy(s=>s.RentalsId).Where(s=>s.OnRent == true).Include(s=>s.Movies).AsNoTracking();
 
-     
 
         public async Task<int> Delete(Guid id)
         {

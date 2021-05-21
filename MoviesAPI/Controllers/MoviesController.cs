@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using MoviesAPI.DTO;
 using MoviesAPI.Model;
 using MoviesAPI.Services;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MoviesAPI.Controllers
 {
@@ -47,6 +47,7 @@ namespace MoviesAPI.Controllers
             var newmovie = mapper.Map<MoviesDTo>(updatedmovie);
             return Ok(newmovie);
         }
+
         //The funtion deletes an existing movie
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteMovies(Guid id,string username) 

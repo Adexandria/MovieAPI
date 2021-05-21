@@ -1,13 +1,13 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using Octokit;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using MoviesAPI.Model;
 using MoviesAPI.UserModel;
-using Octokit;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MoviesAPI.Controllers
 {
@@ -51,16 +51,6 @@ namespace MoviesAPI.Controllers
             }
             return this.StatusCode(StatusCodes.Status400BadRequest, "Password not equal,retype password");
         }
-        private async Task<string>GetUser(string username) 
-        {
-            var github = new GitHubClient(new ProductHeaderValue("MovieAPI"));
-            var user = await github.User.Get(username);
-            if(user != null) 
-            {
-                return "Ok";
-            }
-            return "Not Found";
-        }
     
         [HttpPost("socialmedia/signup")]
         public async Task<ActionResult> SocialMediaSignUp(GithubSignUpModel signUpModel)
@@ -81,18 +71,33 @@ namespace MoviesAPI.Controllers
         public async Task<ActionResult> Login(LoginModel model)
         {
             var logindetails = mapper.Map<Users>(model);
-            var currentuser = await user.FindByNameAsync(logindetails.UserName);
-            if (currentuser == null) return NotFound("Username doesn't exist");
-            var passwordVerifyResult = passwordHasher.VerifyHashedPassword(currentuser, currentuser.PasswordHash, model.Password);
+            var currentUser = await user.FindByNameAsync(logindetails.UserName);
+            if (currentUser == null) return NotFound("Username doesn't exist");
+            var passwordVerifyResult = passwordHasher.VerifyHashedPassword(currentUser, currentUser.PasswordHash, model.Password);
             if (passwordVerifyResult.ToString() == "Success")
             {
-                await login.SignInAsync(currentuser, false);
-                await login.CreateUserPrincipalAsync(currentuser);
+                await login.SignInAsync(currentUser, false);
+                await login.CreateUserPrincipalAsync(currentUser);
 
-                return this.StatusCode(StatusCodes.Status200OK, $"Welcome,{currentuser.UserName} Check out the movies on rental");
+                return this.StatusCode(StatusCodes.Status200OK, $"Welcome,{currentUser.UserName} Check out the movies on rental");
             }
 
             return BadRequest("password is not correct");
+        }
+
+        [HttpPost("socialmedia/login")]
+        public async Task<ActionResult> SocialMediaLogin(GithubLoginModel githubLogin) 
+        {
+            var isSuccess = await GetUser(githubLogin.UserName);
+            if (isSuccess == "Ok")
+            {
+                var currentUser = mapper.Map<LoginModel>(githubLogin);
+                return await Login(currentUser);
+            }
+            else
+            {
+                return BadRequest("No user found");
+            }
         }
 
         [HttpGet("{username}")]
@@ -118,10 +123,7 @@ namespace MoviesAPI.Controllers
             {
                 return BadRequest(isVerifyResult.Errors);
             }
-
         }
-
-       
 
         [HttpPost("{username}/signout")]
         public async Task<ActionResult> Signout(string username)
@@ -134,6 +136,16 @@ namespace MoviesAPI.Controllers
             await login.SignOutAsync();
             return Ok();
         }
-       
+
+        private async Task<string> GetUser(string username)
+        {
+            var github = new GitHubClient(new ProductHeaderValue("MovieAPI"));
+            var user = await github.User.Get(username);
+            if (user != null)
+            {
+                return "Ok";
+            }
+            return "Not Found";
+        }
     }
 }

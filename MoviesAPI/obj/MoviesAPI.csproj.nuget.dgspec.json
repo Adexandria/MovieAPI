@@ -48,25 +48,13 @@
               "target": "Package",
               "version": "[8.1.1, )"
             },
-            "BCrypt.Net-Core": {
-              "target": "Package",
-              "version": "[1.6.0, )"
-            },
             "EntityFramework": {
               "target": "Package",
               "version": "[6.4.4, )"
             },
-            "Instagram.Api": {
-              "target": "Package",
-              "version": "[1.0.6, )"
-            },
             "Microsoft.AspNet.Identity.Core": {
               "target": "Package",
               "version": "[2.2.3, )"
-            },
-            "Microsoft.AspNetCore.Authentication.OAuth": {
-              "target": "Package",
-              "version": "[2.2.0, )"
             },
             "Microsoft.AspNetCore.Identity": {
               "target": "Package",
@@ -74,21 +62,21 @@
             },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[5.0.5, )"
+              "version": "[5.0.6, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[5.0.5, )"
+              "version": "[5.0.6, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[5.0.5, )"
+              "version": "[5.0.6, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[5.0.5, )"
+              "version": "[5.0.6, )"
             },
             "Octokit": {
               "target": "Package",
