@@ -10,7 +10,6 @@ namespace MoviesAPI.UserModel
         public string Password { get; set; }
         [Required(ErrorMessage = "Password not the same")]
         public string RetypePassword { get; set; }
-        [Required(ErrorMessage = "Enter Email")]
-        public string  Email { get; set; }
+       
     }
 }
