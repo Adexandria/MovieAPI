@@ -19,7 +19,8 @@ namespace MoviesAPI.Profiles
             CreateMap<LoginModel, Users>()
                .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(s => s.Password));
 
-
+            CreateMap<GithubSignUpModel, SignUpModel>()
+                .ForMember(dest => dest.RetypePassword, opt => opt.MapFrom(s => s.Password));
         }
     }
 }
