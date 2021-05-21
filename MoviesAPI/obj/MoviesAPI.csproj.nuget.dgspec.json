@@ -56,9 +56,17 @@
               "target": "Package",
               "version": "[6.4.4, )"
             },
+            "Instagram.Api": {
+              "target": "Package",
+              "version": "[1.0.6, )"
+            },
             "Microsoft.AspNet.Identity.Core": {
               "target": "Package",
               "version": "[2.2.3, )"
+            },
+            "Microsoft.AspNetCore.Authentication.OAuth": {
+              "target": "Package",
+              "version": "[2.2.0, )"
             },
             "Microsoft.AspNetCore.Identity": {
               "target": "Package",
@@ -81,6 +89,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[5.0.5, )"
+            },
+            "Octokit": {
+              "target": "Package",
+              "version": "[0.50.0, )"
             }
           },
           "imports": [
