@@ -49,7 +49,7 @@ namespace MoviesAPI
                 options.Password.RequireUppercase = false;
                 options.Lockout.MaxFailedAccessAttempts = 3;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(30);
-                options.User.RequireUniqueEmail = true;
+                options.User.RequireUniqueEmail = false;
 
             });
             services.ConfigureApplicationCookie(options =>
