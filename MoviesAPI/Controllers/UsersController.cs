@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MoviesAPI.Model;
 using MoviesAPI.UserModel;
-
+using Octokit;
 
 namespace MoviesAPI.Controllers
 {
@@ -20,22 +20,20 @@ namespace MoviesAPI.Controllers
         private readonly SignInManager<Users> login;
         private readonly IPasswordHasher<Users> passwordHasher;
 
-
         readonly IMapper mapper;
+
         public UsersController(UserManager<Users> user, IMapper mapper, SignInManager<Users> login, IPasswordHasher<Users> passwordHasher)
         {
             this.user = user;
             this.mapper = mapper;
             this.login = login;
             this.passwordHasher = passwordHasher;
-
         }
+
         [HttpPost("signup")]
         public async Task<ActionResult> SignUp(SignUpModel newuser)
         {
             var signup = mapper.Map<Users>(newuser);
-            var emailExists = await user.FindByEmailAsync(newuser.Email);
-            if (emailExists != null) return BadRequest("Eamil already been used");
             if (newuser.Password.Equals(newuser.RetypePassword))
             {
                 IdentityResult identity = await user.CreateAsync(signup, signup.PasswordHash);
@@ -43,20 +41,42 @@ namespace MoviesAPI.Controllers
                 if (identity.Succeeded)
                 {
                     await user.AddClaimAsync(signup, new Claim(ClaimTypes.Role, "User"));
-                    var emailtoken = await user.GenerateEmailConfirmationTokenAsync(signup);
-                    return Ok($"Account hasn't been verified here's your email token {emailtoken}");
-
+                    await login.SignInAsync(signup, false);
+                    return this.StatusCode(StatusCodes.Status200OK, $"Welcome,{signup.UserName} Check out the movies on rental");
                 }
                 else
                 {
                     return BadRequest("The username exists or check password requirements");
                 }
             }
-            return this.StatusCode(StatusCodes.Status400BadRequest, $"Password not equal,retype password");
-
-
+            return this.StatusCode(StatusCodes.Status400BadRequest, "Password not equal,retype password");
         }
-
+        private async Task<string>GetUser(string username) 
+        {
+            var github = new GitHubClient(new ProductHeaderValue("MovieAPI"));
+            var user = await github.User.Get(username);
+            if(user != null) 
+            {
+                return "Ok";
+            }
+            return "Not Found";
+        }
+    
+        [HttpPost("socialmedia/signup")]
+        public async Task<ActionResult> SocialMediaSignUp(GithubSignUpModel signUpModel)
+        {
+            var isSuccess = await GetUser(signUpModel.UserName);
+            if (isSuccess == "Ok")
+            {
+                var newUser = mapper.Map<SignUpModel>(signUpModel);
+                return await SignUp(newUser);
+            }
+            else 
+            {
+                return BadRequest("No user found");
+            }
+        }
+           
         [HttpPost("login")]
         public async Task<ActionResult> Login(LoginModel model)
         {
@@ -64,7 +84,7 @@ namespace MoviesAPI.Controllers
             var currentuser = await user.FindByNameAsync(logindetails.UserName);
             if (currentuser == null) return NotFound("Username doesn't exist");
             var passwordVerifyResult = passwordHasher.VerifyHashedPassword(currentuser, currentuser.PasswordHash, model.Password);
-            if (passwordVerifyResult.ToString() == "Success" && currentuser.EmailConfirmed == true)
+            if (passwordVerifyResult.ToString() == "Success")
             {
                 await login.SignInAsync(currentuser, false);
                 await login.CreateUserPrincipalAsync(currentuser);
@@ -101,21 +121,7 @@ namespace MoviesAPI.Controllers
 
         }
 
-        [HttpPost("emailverification/{username}")]
-        public async Task<ActionResult> EmailVerify([FromBody] string token,string username) 
-        {
-            var currentuser = await user.FindByNameAsync(username);
-            if(currentuser == null) return NotFound("username doesn't exist");
-            var isVerifyResult = await user.ConfirmEmailAsync(currentuser, token);
-            if (isVerifyResult.Succeeded) 
-            {
-                return Ok("Account is verified");
-            }
-            else 
-            {
-                return BadRequest(isVerifyResult.Errors);
-            }
-        }
+       
 
         [HttpPost("{username}/signout")]
         public async Task<ActionResult> Signout(string username)
