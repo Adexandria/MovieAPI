@@ -30,6 +30,9 @@ namespace MoviesAPI.Controllers
             this.passwordHasher = passwordHasher;
         }
 
+        //The Function creates a new user
+        //using user manager library
+        //then logins in the newly created user
         [HttpPost("signup")]
         public async Task<ActionResult> SignUp(SignUpModel newuser)
         {
@@ -51,7 +54,9 @@ namespace MoviesAPI.Controllers
             }
             return this.StatusCode(StatusCodes.Status400BadRequest, "Password not equal,retype password");
         }
-    
+        
+        //This function creates a new user
+        //by using an existing GitHub account
         [HttpPost("socialmedia/signup")]
         public async Task<ActionResult> SocialMediaSignUp(GithubSignUpModel signUpModel)
         {
@@ -66,13 +71,16 @@ namespace MoviesAPI.Controllers
                 return BadRequest("No user found");
             }
         }
-           
+        
+        //This function sign in existing user
+        //by using the signin manager library.
         [HttpPost("login")]
         public async Task<ActionResult> Login(LoginModel model)
         {
             var logindetails = mapper.Map<Users>(model);
             var currentUser = await user.FindByNameAsync(logindetails.UserName);
             if (currentUser == null) return NotFound("Username doesn't exist");
+            //This verfies the user password by using IPasswordHasher interface
             var passwordVerifyResult = passwordHasher.VerifyHashedPassword(currentUser, currentUser.PasswordHash, model.Password);
             if (passwordVerifyResult.ToString() == "Success")
             {
@@ -85,6 +93,8 @@ namespace MoviesAPI.Controllers
             return BadRequest("password is not correct");
         }
 
+        //This signs in the existing user using the 
+        //github account
         [HttpPost("socialmedia/login")]
         public async Task<ActionResult> SocialMediaLogin(GithubLoginModel githubLogin) 
         {
@@ -100,6 +110,7 @@ namespace MoviesAPI.Controllers
             }
         }
 
+        //To generate the token to reset password
         [HttpGet("{username}")]
         public async Task<ActionResult> ResetPassword(string username) 
         {
@@ -109,11 +120,15 @@ namespace MoviesAPI.Controllers
             return Ok($"Reset Password Token {passwordResetToken}");
         }
 
+        //To verify the Password reset token
+        //which gives access to change the user's password
         [HttpPost("resetpassword/{username}")]
         public async Task<ActionResult> VerifyToken(ResetPassword resetPassword,string username) 
         {
             var currentuser = await user.FindByNameAsync(username);
             if (currentuser == null) return NotFound("username doesn't exist");
+            var isVerify = passwordHasher.VerifyHashedPassword(currentuser, currentuser.PasswordHash, resetPassword.NewPassword);
+            if (isVerify.ToString() == "Success") return BadRequest("Old password can't be new password");
             var isVerifyResult = await user.ResetPasswordAsync(currentuser, resetPassword.Token, resetPassword.NewPassword);
             if (isVerifyResult.Succeeded)
             {
@@ -125,6 +140,7 @@ namespace MoviesAPI.Controllers
             }
         }
 
+        //To sign out a user
         [HttpPost("{username}/signout")]
         public async Task<ActionResult> Signout(string username)
         {
