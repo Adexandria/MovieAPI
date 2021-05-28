@@ -45,7 +45,7 @@ namespace MoviesAPI.Controllers
                 {
                     await user.AddClaimAsync(signup, new Claim(ClaimTypes.Role, "User"));
                     await login.SignInAsync(signup, false);
-                    return this.StatusCode(StatusCodes.Status200OK, $"Welcome,{signup.UserName} Check out the movies on rental");
+                    return this.StatusCode(StatusCodes.Status201Created, $"Welcome,{signup.UserName} Check out the movies on rental");
                 }
                 else
                 {
