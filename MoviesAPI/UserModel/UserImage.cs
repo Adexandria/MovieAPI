@@ -12,7 +12,6 @@ namespace MoviesAPI.UserModel
         [Key]
         public Guid ImageId { get; set; }
         public string UserImageURL { get; set; }
-        [ForeignKey("AspNetUsers")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
     }
 }
