@@ -10,6 +10,7 @@ namespace MoviesAPI.Model
         public Guid MoviesId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string MovieImageURL { get; set; }
         public float Rating { get; set; }
         [ForeignKey("Users")]
         public string UserId { get; set; }
