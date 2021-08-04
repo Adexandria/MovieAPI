@@ -31,6 +31,8 @@ namespace MoviesAPI
             services.AddScoped<IMovies, MoviesRepository>();
             services.AddScoped<IRentals, RentalRepository>();
             services.AddScoped<IPasswordHasher<Users>,PasswordHasher<Users>>();
+            services.AddScoped<IBlob, Blob>();
+            services.AddScoped<IUserImage, UserImageRespository>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddIdentity<Users, IdentityRole>().AddEntityFrameworkStores<IdentityDb>().AddSignInManager().AddDefaultTokenProviders();
             services.AddDbContext<MovieDb>(opt =>
